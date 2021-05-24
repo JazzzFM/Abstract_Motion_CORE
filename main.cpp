@@ -49,25 +49,27 @@ int main(int argc, char **argv) {
 	
 	srand(time(NULL));
 
-	int M = 100;
+	int M = 12000;
         double r = 0.1;
-	int Ns = 10;
+	int Ns = 20;
 
+	//STEP 0
 	int maxInt = 3;
 	int numOfMaxSimplex = 4;
 	komplex.initComplex(numOfMaxSimplex, maxInt + 1);
 
+	//STEP 1
 	komplex.K.A[0][0].initSimplex(3, 0, 1, 2);
 	komplex.K.A[0][1].initSimplex(3, 0, 1, 3);
 	komplex.K.A[0][2].initSimplex(3, 0, 2, 3);
 	komplex.K.A[0][3].initSimplex(3, 1, 2, 3);
 
-	//komplex.K.A[0][3].initSimplex(2, 1, 2);
 	KxK.initComplexProduct(komplex);
 	KxK.escMaximalSimplices();
 	map1.projection1(KxK);
 	map0.projection2(KxK);
-
+	
+	//STEP 2
 	L.initSubComplexJ(96);
 	int counting = 0;
 
@@ -78,24 +80,16 @@ int main(int argc, char **argv) {
                 }
         }
 
-	 JsubL.initSubComplexJ(9);
-	 JsubL.initA(0, KxK.listOfFacets.A[3][1]);
-	 JsubL.initA(1, KxK.listOfFacets.A[8][1]);
-	 JsubL.initA(2, KxK.listOfFacets.A[7][1]);
-	 JsubL.initA(3, KxK.listOfFacets.A[2][1]);
-	 JsubL.initA(4, KxK.listOfFacets.A[7][0]);
-	 JsubL.initA(5, KxK.listOfFacets.A[4][0]);
-	 JsubL.initA(6, KxK.listOfFacets.A[3][0]);
-	 JsubL.initA(7, KxK.listOfFacets.A[2][0]);
-	 JsubL.initA(8, KxK.listOfFacets.A[0][0]);
-
 	 L.initZero_Skeleton();
-	 JsubL.initZero_Skeleton();
-
+	
+	 //STEP 3
 	 komplex.initAdjMat();
 	 komplex.graph.addWeight(0, 1, 1);
 	 komplex.graph.addWeight(0, 2, 1);
+	 komplex.graph.addWeight(0, 3, 1);
 	 komplex.graph.addWeight(1, 2, 1);
+	 komplex.graph.addWeight(1, 3, 1);
+	 komplex.graph.addWeight(2, 3, 1);
 
 	//suchen.initLocalSearch(JsubL, komplex, map1, map0, M, r);	
 

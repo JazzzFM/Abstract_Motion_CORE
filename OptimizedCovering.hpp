@@ -87,7 +87,7 @@ class OptimizedCovering {
             //cout << "                 <<ORDER PARTITION>>\n";
             //c.orderPartition(a);
             cout << "                   <<PARTITION P'>>\n";
-            								c.p.escTensorSimplexAlpha();
+            	//							c.p.escTensorSimplexAlpha();
 
             cout << "                   <<REORDERING P>>\n";
                                         				orderP();
@@ -132,7 +132,7 @@ class OptimizedCovering {
                                         largest(j, L);
                             
                             //cout << "\nNOW WORKING ON Q--------------------------------------------------------------------------------------------------------------\n\n                   <<WORKING WITH list P of partitions>>\n"; 
-                                        c.pOrder.escTensorSimplexAlpha();
+                                        //c.pOrder.escTensorSimplexAlpha();
                             
                             //cout << "                   <<BIG UNION OF PARTITION INTO JD from j-1 >>  j-1 := " << j-1 << "\n";
                              //          cout << "\n                   <<JQ>>\n";
@@ -208,20 +208,20 @@ class OptimizedCovering {
                                         R0 = rand()%(L.listOfFacets.n);
                                         JD.resetSubComplexJ(L.listOfFacets.A[0][R0]);
                                         JD.listOfFacets.n = 0;
-                                        JD.escSubComplexJ();
+                                        //JD.escSubComplexJ();
 
                                         
                             cout << "\n                   <<JQ>>\n";
                                         R0 = rand()%(L.listOfFacets.n);
                                         JQ.resetSubComplexJ(L.listOfFacets.A[0][R0]);
                                         JQ.listOfFacets.n = 0;
-                                        JQ.escSubComplexJ();
+                                        //JQ.escSubComplexJ();
 
                             cout << "\n                   <<JP>>\n";
                                         R0 = rand()%(L.listOfFacets.n);
                                         JP.resetSubComplexJ(L.listOfFacets.A[0][R0]);
                                         JP.listOfFacets.n = 0;
-                                        JP.escSubComplexJ();
+                                        //JP.escSubComplexJ();
 
                                         //matMapJP.resetMatrixSimplicialMapZero(destroyAux);
 
@@ -229,7 +229,7 @@ class OptimizedCovering {
                                         R0 = rand()%(L.listOfFacets.n);
                                         JQs.resetSubComplexJ(L.listOfFacets.A[0][R0]);
                                         JQs.listOfFacets.n = 0;
-                                        JQs.escSubComplexJ();
+                                        //JQs.escSubComplexJ();
                                         //matMapJQs.resetMatrixSimplicialMapZero(destroyAux);
                             
                             
@@ -241,7 +241,8 @@ class OptimizedCovering {
 
             }//End of Loop
 		
-	   // c.pOrder.escTensorSimplexAlpha();
+	    //c.pOrder.escTensorSimplexAlpha();
+	    c.WriteTxt(c.pOrder.stringTensorSimplexAlpha());
 	
 		/////////////////
             //Preparing Buffer SubComplex
@@ -255,38 +256,38 @@ class OptimizedCovering {
             /////////////////
             //Copying 1st subcomplex of pOrder
             ////////////////
+	    string ret = "";
 
-
-            	for (int I = 0; I < c.getPM(); I++){
-                        for (int iii = 1; iii < c.pOrder.sizeOfPartition(I); iii++)
-                            joker.pushSimplexAlpha(c.pOrder.getPartitionSimplex(I, iii));
+            	//for (int I = 0; I < 3; I++){
+                //        for (int iii = 1; iii < c.pOrder.sizeOfPartition(I); iii++)
+                //            joker.pushSimplexAlpha(c.pOrder.getPartitionSimplex(I, iii));
             
-                        cout << "\n\n------------------------------------<<<"<< I << "s <<RESULTS>>---------------------------------------------------\n\n";
-                        joker.escSubComplexJ();
+                //        ret += "\n\n------------------------------------<<<For Partition := " + to_string(I) + "s <<RESULTS>>---------------------------------------------------\n\n";
+                //        //joker.escSubComplexJ();
             
-                        /////////////////
-                        //Running LocalSearch
-                        ////////////////
-                        if (joker.listOfFacets.n > 1) {
-                            while(suchen.psy_reduced.m < 2) 
-                                suchen.updateLocalSearch(joker, K, a, b, 1000, 0.1);
-                        }
+                //        /////////////////
+                //        //Running LocalSearch
+                //        ////////////////
+                //        if (joker.listOfFacets.n > 1) {
+                //            while(suchen.psy_reduced.m < 2) 
+                //                ret += suchen.updateLocalSearch(joker, K, a, b, M, 0.1);
+                //        }
             
-                        if (joker.listOfFacets.n == 1) cout << "\nSize of complex == 1, trivial case\n\n";
+                //        if (joker.listOfFacets.n == 1) ret += "\nSize of complex == 1, trivial case\n\n";
             
-                        if (I < c.pOrder.m - 1)
-                            joker.resetSubComplexJ(c.pOrder.getPartitionSimplex(I+1, 0));
+                //        if (I < c.pOrder.m - 1)
+                //            joker.resetSubComplexJ(c.pOrder.getPartitionSimplex(I+1, 0));
 
 
 
-		}
+		//}
 
 
 
 
 
 
-
+		c.WriteTxt(ret);
 	    c.endCovering();
         }//End of runOptimizedCovering
 

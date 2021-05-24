@@ -149,11 +149,10 @@ class Covering {
                 thread = MPI_Comm_rank(MPI_COMM_WORLD, &core);
                 thread = MPI_Comm_size(MPI_COMM_WORLD, &coreS);
                 srand(time(NULL));
-
-        string file = to_string(core);
-        string file_name = "core" + file + ".txt";
-        this->all_files = SimplexAlphaWriter(file_name);
-
+	
+        	string file = to_string(core);
+        	string file_name = "core" + file + ".txt";
+        	this->all_files = SimplexAlphaWriter(file_name);
 
 
                 //printf("\n\n<<<<< RCC >>>>>>\n\n");
@@ -415,7 +414,7 @@ class Covering {
 
 
 		O.clear();
-		J.escSubComplexJ();
+		//J.escSubComplexJ();
 				////////////////////////////////////////////////////////////////
 			 	////////////END OF RCC//////////////////////////////////////////
 			    	////////////////////////////////////////////////////////////////

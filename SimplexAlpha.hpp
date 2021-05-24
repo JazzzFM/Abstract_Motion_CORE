@@ -58,9 +58,10 @@ class MatrixSimplexAlpha {
 
 			string ret = "\n";
 			for (int i = 0; i < this->m; i++) {
-				ret += " row := " + to_string(i) + "\n";
-				for (int j = 0; j < this->n; j++)
-					ret += " " + this->A[i][j].stringSimplexAlpha(); 
+				//ret += " row := " + to_string(i) + "\n";
+				for (int j = 0; j < this->n; j++) {
+					ret += "[" + to_string(i) + "]" + "[" + to_string(j) + "]" + "           " + this->A[i][j].stringSimplexAlpha();
+				}	
 			}
 
 			return ret;
@@ -646,7 +647,7 @@ class TensorSimplexAlpha {
 
 			for (int i = 0; i < this->m; i++) {
 				for (int j = 0; j < this->n; j++){
-					printf("\n-->List %d\n", j);
+					ret += "\n-->List := " + to_string(j) + "\n\n";
 					ret += this->A[i][j].stringMatrixSimplexAlpha();
 				}
 			}

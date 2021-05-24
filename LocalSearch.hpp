@@ -31,7 +31,7 @@ class LocalSearch {
 
 		void start(SimplicialMap);
 		void initLocalSearch(SubComplexJ, Complex, SimplicialMap a, SimplicialMap b, int M, double r);
-		void updateLocalSearch(SubComplexJ, Complex, SimplicialMap a, SimplicialMap b, int M, double r);
+		string updateLocalSearch(SubComplexJ, Complex, SimplicialMap a, SimplicialMap b, int M, double r);
 		int randomPhi_vi(SubComplexJ, Complex K, SimplicialMap a);
 		void setVkBuild(Complex);
 		void ranVkVertex(Complex);
@@ -72,6 +72,17 @@ class LocalSearch {
 		
 
 	}
+
+	string stringReducedChainResults(SubComplexJ J, SimplicialMap a) {
+
+                //this->psy_reduced.resetMatrixSimplicialMap(a);
+                //this->psy_reduced.m = 0;
+		string ret = "\n\nMap\n";
+                ret += this->psy_reduced.stringMatrixSimplicialMap(J);
+                cout << "\n\n-->> Reduced found " << this->psy_reduced.m << " contiguity chains -->>\n";
+		ret += "\n";
+		return ret;
+        }
 	
 	void destroyPSY(SimplicialMap);
 

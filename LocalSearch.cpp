@@ -89,7 +89,7 @@ void LocalSearch::initLocalSearch(SubComplexJ J, Complex K, SimplicialMap a, Sim
 	this->psy_reduced.initA(0, a);
 }
 
-void LocalSearch::updateLocalSearch(SubComplexJ J, Complex K, SimplicialMap a, SimplicialMap b, int M, double r) {
+string LocalSearch::updateLocalSearch(SubComplexJ J, Complex K, SimplicialMap a, SimplicialMap b, int M, double r) {
 
 	printf("\n\n\n-->>LocalSearch start >>>>>>>>>\n");
 	//printf("-->We start by defining a list Psy = {a}.\n");
@@ -97,6 +97,7 @@ void LocalSearch::updateLocalSearch(SubComplexJ J, Complex K, SimplicialMap a, S
 	this->destroyPsy_Reduced(a);
 	this->vi.updateVectorInt(0, 0);
 	int ii = 0;
+	string ret = "";
 
 	//printf("-->Our parameters are given by M := %d and r := %lg\n", M, r);
 	this->PSY.pushZero(a);
@@ -131,7 +132,7 @@ void LocalSearch::updateLocalSearch(SubComplexJ J, Complex K, SimplicialMap a, S
 						printf("\n\n\n\n-->//////////////////////////////\n\n//////////////////////////////\n\nContinuity %d-Chain Found\n\n//////////////////////////////\n\n//////////////////////////////\n\n\n\n", PSY.m);
 						printf("\n-->>>>updateLocalSearch found a chain");
 							this->reduceChain(J, K);
-							this->escReducedChainResults(J, a);
+							ret += this->stringReducedChainResults(J, a);
 						break;
 					}
 				}
@@ -148,6 +149,7 @@ void LocalSearch::updateLocalSearch(SubComplexJ J, Complex K, SimplicialMap a, S
 
 	this->destroyPSY(a);
 	printf("-->>LocalSearch finish >>>>>>>>>>>>>\n");
+	return ret;
 }
  
 void LocalSearch::destroyPSY(SimplicialMap a) {
