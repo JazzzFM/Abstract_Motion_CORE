@@ -1,7 +1,7 @@
 #!/bin/bash 
-# Las sentecnias que inician con: "#PBS" 
-# son comandos para el sistema de colas PBS.
-
+## Las sentecnias que inician con: "#PBS" 
+## son comandos para el sistema de colas PBS.
+#
 ## Es necesario editar este script, si requiere mas de un nodo cambiando "nodes=1" por los requeridos,
 ## P.E. si se requieren 128 cores entonecs nodes=4 ... etc.  
 ## Se debe dejar ppn=32 que son los cores existentes por cada nodo AMD, 
@@ -32,9 +32,13 @@
 
 
  #CREANDO EL DIRECTORIO DE TRABAJO
-export PATH=/opt/openmpi/gnu/3.1.4/bin/:$PATH
-export LD_LIBRARY_PATH=/opt/openmpi/gnu/3.1.4/lib/:$LD_LIBRARY_PATH
 source  /opt/rh/devtoolset-6/enable 
+
+source /opt/intel/impi/4.0.3/bin64/mpivars.sh intel64
+source /opt/intel/bin/compilervars.sh intel64
+
+
+
 
 echo user   :  $USER;
 echo jobname:  $PBS_JOBNAME;
@@ -48,21 +52,15 @@ mkdir $PBS_O_WORKDIR/admon;
 cat $PBS_NODEFILE | sort | uniq > $PBS_O_WORKDIR/admon/lista-nodos-$PBS_JOBID.txt
 env      > $PBS_O_WORKDIR/admon/entorno-$PBS_JOBNAME.txt;
 
+NP=$(($PBS_NUM_NODES * $PBS_NUM_PPN))
 
 rm -f ./$PBS_JOBNAME
 
-# icpc  main.cpp SimplexAbstract.cpp -I./RCC.hpp SimplexAlpha.cpp LocalSearch.cpp Matrix.cpp -I./Covering.hpp -I./OptimizedCovering.hpp -std=c++0x -O3 -mavx -ip   -o $PBS_JOBNAME
-
-#mpiicpc -fsycl main.cpp SimplexAbstract.cpp SimplexAlpha.cpp LocalSearch.cpp Matrix.cpp Covering.hpp RCC.hpp -std=c++0x -O3 -mavx -no-ip -o absMtion -pthread
-
-
-mpicxx   main.cpp SimplexAbstract.cpp SimplexAlpha.cpp LocalSearch.cpp Matrix.cpp  Covering.hpp  RCC.hpp  -std=c++0x -O3 -mavx  -pthread -o absMotion
-
+mpicxx  main.cpp SimplexAbstract.cpp SimplexAlpha.cpp LocalSearch.cpp Matrix.cpp  Covering.hpp  RCC.hpp -DMPICH_IGNORE_CXX_SEEK  -std=c++0x -O3 -mavx  -pthread -o absMotion-intel-ignore-crecxxseek
 
 date;
 
-# ./$PBS_JOBNAME > $PBS_JOBNAME.out
-time mpirun -np 96 ./absMotion > $PBS_JOBNAME.out
+time mpirun -np $NP ./absMotion-intel-ignore-crecxxseek > absMotion-intel-ignore-crecxxseek.out
 
 date;
 
