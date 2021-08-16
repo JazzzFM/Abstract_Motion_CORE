@@ -1,29 +1,29 @@
 #!/bin/bash
-#SBATCH -J prueba 
-#SBATCH -o test.o%j
-#SBATCH -n 4
-#SBATCH --ntasks-per-node=4
+#SBATCH -J motion 
+#SBATCH -o motion.o%j
+#SBATCH -n 96
+#SBATCH --ntasks-per-node=24
 #SBATCH -p comp
-#SBATCH -t 01:00:00
+#SBATCH -t 120:00:00
 
 echo $SLURM_JOB_ID
 echo $SLURM_PRUEBA
 echo $SLURM_JOB_NUM_NODES
 
 # Load Intel Parallel Studio
-module load compilers/devtoolset/4
-module load tools/intel/impi/5.0.2.044
-module load compilers/intel/parallel_studio_xe_2015/15.0.1
+source /opt/rh/devtoolset-7/enable
+source /software/LNS/intel-parallel-studio-xe-2017/bin/compilervars.sh -arch intel64 -platform linux
+source /software/LNS/intel-parallel-studio-xe-2017/impi/2017.4.239/bin64/mpivars.sh
+source /software/LNS/intel-parallel-studio-xe-2017/mkl/bin/mklvars.sh intel64
 
 # Build the code
-mpicxx main.cpp -std=c++0x -O3 -mavx  -pthread -o mpi
+mpicxx main.cpp SimplexAbstract.cpp SimplexAlpha.cpp LocalSearch.cpp Matrix.cpp Covering.hpp RCC.hpp -std=c++0x -O3 -mavx  -pthread -o motion 
 
 date;
 
 # Run de program
-time mpirun -np 4 mpi > mpi-simple.out
+time mpirun -np 96 ./motion > motion.out
 
 date;
-
 
 exit 0;
