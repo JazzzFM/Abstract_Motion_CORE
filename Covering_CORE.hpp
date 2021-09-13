@@ -15,8 +15,14 @@
 #include "Lex.hpp"
 #include <stdio.h>
 
+//Esta librería es en local
 #include <mpi.h>
+
+// Esta librería es en el cluster CINVESTAV
 //#include "/opt/intel/impi/4.0.3.008/intel64/include/mpi.h"
+
+// Poner aqui la librería del cluster del LNS
+
 //#include "RCC.hpp"
 
 using namespace std;

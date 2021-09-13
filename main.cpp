@@ -10,11 +10,9 @@
 #include "Lex.hpp"
 #include <mpi.h>
 #include <stdio.h>
+#include <cstdio>
+#include <iomanip>     
 #include <functional>
-
-/*compile with*/
-/*g++ main.cpp SimplexAbstract.cpp RCC.hpp SimplexAlpha.cpp LocalSearch.cpp Matrix.cpp Covering.hpp OptimizedCovering.hpp -o motion */
-/*ffmpeg -r 36 -f image2 -s 500x500 -i topology%03d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4*/
 
 using namespace std;
 
@@ -35,7 +33,6 @@ MatrixIntList ll;
 MatrixInt Test;
 SimplexAlpha testSimplex;
 
-//RCC rcc, addFacets;
 Covering c;
 OptimizedCovering O;
 
@@ -46,34 +43,36 @@ double fRand(double fMin, double fMax)
 }
 
 int main(int argc, char **argv) {
-	
-	srand(time(NULL));
 
-	int M = 12000;
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    ios_base::sync_with_stdio(false);
+
+
+        srand(time(NULL));
+
+        int M = 40000;
         double r = 0.1;
-	int Ns = 20;
+        int Ns = 100;
 
-	//STEP 0
-	int maxInt = 3;
-	int numOfMaxSimplex = 4;
-	komplex.initComplex(numOfMaxSimplex, maxInt + 1);
+        int maxInt = 3;
+        int numOfMaxSimplex = 4;
+        komplex.initComplex(numOfMaxSimplex, maxInt + 1);
 
-	//STEP 1
-	komplex.K.A[0][0].initSimplex(3, 0, 1, 2);
-	komplex.K.A[0][1].initSimplex(3, 0, 1, 3);
-	komplex.K.A[0][2].initSimplex(3, 0, 2, 3);
-	komplex.K.A[0][3].initSimplex(3, 1, 2, 3);
+        komplex.K.A[0][0].initSimplex(3, 0, 1, 2);
+        komplex.K.A[0][1].initSimplex(3, 0, 1, 3);
+        komplex.K.A[0][2].initSimplex(3, 0, 2, 3);
+        komplex.K.A[0][3].initSimplex(3, 1, 2, 3);
 
-	KxK.initComplexProduct(komplex);
-	KxK.escMaximalSimplices();
-	map1.projection1(KxK);
-	map0.projection2(KxK);
-	
-	//STEP 2
-	L.initSubComplexJ(96);
-	int counting = 0;
+        KxK.initComplexProduct(komplex);
+        KxK.escMaximalSimplices();
+        map1.projection1(KxK);
+        map0.projection2(KxK);
 
-	for (int i = 0; i < KxK.listOfFacets.m; i++) {
+        L.initSubComplexJ(96);
+        int counting = 0;
+
+        for (int i = 0; i < KxK.listOfFacets.m; i++) {
                 for (int j = 0; j < KxK.listOfFacets.rowLength.getA(0, i); j++) {
                         L.initA(counting, KxK.listOfFacets.A[i][j]);
                         counting += 1;
@@ -82,36 +81,32 @@ int main(int argc, char **argv) {
 
 	 L.initZero_Skeleton();
 	
-	 //STEP 3
-	 komplex.initAdjMat();
-	 komplex.graph.addWeight(0, 1, 1);
-	 komplex.graph.addWeight(0, 2, 1);
-	 komplex.graph.addWeight(0, 3, 1);
-	 komplex.graph.addWeight(1, 2, 1);
-	 komplex.graph.addWeight(1, 3, 1);
-	 komplex.graph.addWeight(2, 3, 1);
-
-	//suchen.initLocalSearch(JsubL, komplex, map1, map0, M, r);	
-
-	int ccount = 0;
-	
-	//c.initCovering(L, komplex, map1, map0, M, r, argc, argv);
-        //c.runCovering(L, komplex, map1, map0, M, r, argc, argv);
-        //c.endCovering();
-	//suchen.updateLocalSearch(JsubL, komplex, map1, map0, M, r);
-	
-	//rcc.initRCC_CORE(L, komplex, map1, map0, M, r, argc, argv);
-	//rcc.runRCC_CORE(L, komplex, map1, map0, M, r, argc, argv);
-	//rcc.escRCCResults();
-
-	//rcc.endRCC_CORE();
-	
-	O.initOptimizedCovering_CORE(L, komplex, map1, map0, M, r,  argc, argv);
-	O.runOptimizedCovering_CORE(L, komplex, map1, map0, M, Ns, r, argc, argv);
+         komplex.initAdjMat();
+         komplex.graph.addWeight(0, 1, 1);
+         komplex.graph.addWeight(0, 2, 1);
+         komplex.graph.addWeight(0, 3, 1);
+         komplex.graph.addWeight(1, 2, 1);
+         komplex.graph.addWeight(1, 3, 1);
+         komplex.graph.addWeight(2, 3, 1);
 
 
-	cout << "\n\n\n";
-	O.closeWriterO();
-	
-	return 0;
+        int ccount = 0;
+
+        O.initOptimizedCovering_CORE(L, komplex, map1, map0, M, r,  argc, argv);
+        O.runOptimizedCovering_CORE(L, komplex, map1, map0, M, Ns, r, argc, argv);
+
+
+        cout << "\n\n\n";
+        O.closeWriterO();
+
+    
+    clock_gettime(CLOCK_MONOTONIC, &end); 
+    double time_taken;
+    time_taken = (end.tv_sec - start.tv_sec) * 1e9;
+    time_taken = (time_taken + (end.tv_nsec - start.tv_nsec)) * 1e-9;
+  
+    cout << "El tiempo que el programa tomó es: " << fixed
+         << time_taken << setprecision(9);
+    cout << " sec" << endl;
+    return 0;
 }
